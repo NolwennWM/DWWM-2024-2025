@@ -1,0 +1,7 @@
+<header>
+    <h1>{{ title ?? "Cours Symfony" }}</h1>
+    <nav class="header-navigation">
+        <a href="{{path('app_home')}}" class="{{ app.current_route == 'app_home'?'active':''}}">Accueil</a>
+        <a href="">Page 2</a>
+    </nav>
+</header>

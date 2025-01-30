@@ -1,3 +1,15 @@
 body {
     background-color: skyblue;
 }
+.header-navigation
+{
+    background-color: lightgreen;
+    display: flex;
+    gap: 20px;
+    & .active
+    {
+        font-weight: bold;
+        text-decoration: none;
+        border: 1px solid black;
+    }
+}

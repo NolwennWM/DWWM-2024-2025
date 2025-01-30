@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>Bonjour {{prenom ~ " " ~ nom}}</h2>
+    <a href="{{path('app_bonjour', {nom:'Fontaine', prenom:'Jean'})}}">Bonjour Français</a>
+    <br>
+    <a href="{{path('app_hello', {username:'Maurice'})}}">Bonjour Anglais</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}} - Hello HomeController!{% endblock %}
+
+{% block body %}
+{# Ceci est un commentaire #}
+{{controller_name | upper}}
+<br>
+{{ pays.france}}
+<br>
+{{ pays.angleterre | reverse }}
+<br>
+<strong>
+    {% if chiffre > 5 %}
+        {{chiffre}} est plus grand que 5
+    {% elseif chiffre < 5 %}
+        {{chiffre}} est plus petit que 5
+    {% else %}
+        Le chiffre est 5
+    {% endif %}
+</strong>
+
+<ul>
+    {% for f in fruits | reverse %}
+        <li>{{f}}</li>
+    {% endfor %}
+</ul>
+{% for v in vide %}
+    le tableau étant vide, ce message ne s'affichera pas.
+{% else %}
+    Votre tableau est vide.
+{% endfor %}
+<br>
+{{xss}}
+{# {{xss|raw}} #}
+{% endblock %}
