@@ -6,6 +6,7 @@ use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
@@ -22,6 +23,9 @@ class Message
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $editedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    private ?Category $category = null;
 
     public function getId(): ?int
     {
@@ -62,5 +66,27 @@ class Message
         $this->editedAt = $editedAt;
 
         return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+    #[ORM\PreUpdate()]
+    public function onPreUpdate()
+    {
+        $this->editedAt = new \DateTime();
+    }
+    #[ORM\PrePersist()]
+    public function onPrePersist()
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }

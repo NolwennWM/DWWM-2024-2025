@@ -75,7 +75,7 @@ final class MessageController extends AbstractController
         }else
         {
             $message->setContent("Message Modifié")
-                    ->setEditedAt(new \DateTime());
+                    /* ->setEditedAt(new \DateTime()) */;
             $em = $doc->getManager();
             $em->persist($message);
             $em->flush();
