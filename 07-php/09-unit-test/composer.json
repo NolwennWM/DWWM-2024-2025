@@ -1,0 +1,9 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "11"
+    },
+    "scripts": {
+        "test-simple": "./vendor/bin/phpunit tests",
+        "test": "./vendor/bin/phpunit --testdox --colors=always tests"
+    }
+}
