@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
@@ -15,6 +16,8 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message:"Veuillez renseigner ce champ")]
+    #[Assert\Length(min:5, max:500)]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $Content = null;
 

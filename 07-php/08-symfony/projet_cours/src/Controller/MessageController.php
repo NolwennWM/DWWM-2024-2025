@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Form\MessageType;
 use App\Repository\MessageRepository;
+use App\Service\Mailer;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -13,17 +16,32 @@ use Symfony\Component\Routing\Attribute\Route;
 final class MessageController extends AbstractController
 {
     #[Route('/add', name: 'app_message_create')]
-    public function createMessage(ManagerRegistry $doc): Response
+    public function createMessage(ManagerRegistry $doc, Request $request, Mailer $mailer): Response
     {
-        $em = $doc->getManager();
         $message = new Message();
-        $message->setContent("Ceci est un message de test")
-                ->setCreatedAt(new \DateTimeImmutable());
-        $em->persist($message);
-        $em->flush();
+        // $message->setContent("Ceci est un message de test")
+        //         ->setCreatedAt(new \DateTimeImmutable());
+        // $em->persist($message);
+        // $em->flush();
+        $form = $this->createForm(MessageType::class, $message);
+        // $form->remove("createdAt");
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            // dd($message);
+            $em = $doc->getManager();
+            $em->persist($message);
+            $em->flush();
+            
+            $this->addFlash("success", "Un nouveau message a bien été ajouté");
 
-        return $this->render('message/index.html.twig', [
-            'controller_name' => 'MessageController',
+            $mailer->sendEmail("monAppSymfony@gmail.com", "monUtilisateur@gmail.com", "Nouveau message", $message->getContent());
+
+            return $this->redirectToRoute('app_message_read');
+
+        }
+        return $this->render('message/create.html.twig', [
+            'messageForm' => $form,
         ]);
     }
 
@@ -66,7 +84,7 @@ final class MessageController extends AbstractController
         return $this->redirectToRoute("app_message_read");
     }
     #[Route("/update/{id<^\d+$>}", name: "app_message_update")]
-    public function updateMessage(Message $message=null, ManagerRegistry $doc):Response
+    public function updateMessage(Message $message=null, ManagerRegistry $doc, Request $request):Response
     {
         // dd($message);
         if(!$message)
@@ -74,12 +92,19 @@ final class MessageController extends AbstractController
             $this->addFlash("error", "Aucun message correspondant");
         }else
         {
-            $message->setContent("Message Modifié")
-                    /* ->setEditedAt(new \DateTime()) */;
-            $em = $doc->getManager();
-            $em->persist($message);
-            $em->flush();
-            $this->addFlash("info", "Message modifié avec succès");
+            $form = $this->createForm(MessageType::class, $message);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) 
+            {
+                $em = $doc->getManager();
+                $em->persist($message);
+                $em->flush();
+                $this->addFlash("success", "Votre message a été modifié");
+                return $this->redirectToRoute('app_message_read');
+            }
+            return $this->render('message/create.html.twig', [
+                'messageForm' => $form,
+            ]);;
         }
         return $this->redirectToRoute("app_message_read");
     }
