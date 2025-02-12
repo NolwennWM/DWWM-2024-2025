@@ -1,6 +1,6 @@
 <?php 
 declare(strict_types=1);
-require __DIR__. "/../../ressources/service/_csrf.php";
+require __DIR__. "/../../ressources/services/_csrf.php";
 use PHPUnit\Framework\TestCase;
 
 final class CSRFTest extends TestCase
